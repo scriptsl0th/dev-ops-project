@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'jdk17'
+    }
+
     environment {
         DOCKERHUB_USER = 'scriptsl0th'
         APP_NAME       = 'dev-ops-project'
@@ -12,6 +16,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Check Tools') {
+            steps {
+                sh 'java -version'
+                sh 'javac -version'
+                sh './backend/mvnw -version'
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
