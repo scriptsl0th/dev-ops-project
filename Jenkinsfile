@@ -121,7 +121,17 @@ pipeline {
                     kubectl version --client
                     kubectl cluster-info
                     kubectl get nodes
-                    kubectl apply --validate=false -f k8s/
+                    kubectl apply --validate=false -f k8s/namespace.yaml
+                    kubectl get namespace devops-app
+                    sleep 5
+                    kubectl apply --validate=false -f k8s/postgres-secret.yaml
+                    kubectl apply --validate=false -f k8s/postgres-pvc.yaml
+                    kubectl apply --validate=false -f k8s/postgres-service.yaml
+                    kubectl apply --validate=false -f k8s/postgres-deployment.yaml
+                    kubectl apply --validate=false -f k8s/backend-service.yaml
+                    kubectl apply --validate=false -f k8s/backend-deployment.yaml
+                    kubectl apply --validate=false -f k8s/frontend-service.yaml
+                    kubectl apply --validate=false -f k8s/frontend-deployment.yaml
 
                     kubectl -n devops-app set image deployment/dev-ops-frontend \
                       frontend="${DOCKERHUB_USER}/${APP_NAME}-frontend:${IMAGE_TAG}"
