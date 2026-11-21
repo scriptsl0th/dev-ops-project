@@ -119,7 +119,9 @@ pipeline {
             steps {
                 sh '''
                     kubectl version --client
-                    kubectl apply -f k8s/
+                    kubectl cluster-info
+                    kubectl get nodes
+                    kubectl apply --validate=false -f k8s/
 
                     kubectl -n devops-app set image deployment/dev-ops-frontend \
                       frontend="${DOCKERHUB_USER}/${APP_NAME}-frontend:${IMAGE_TAG}"
