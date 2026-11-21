@@ -23,6 +23,7 @@ pipeline {
             steps {
                 sh 'java -version'
                 sh 'javac -version'
+                sh 'chmod +x backend/mvnw'
                 sh './backend/mvnw -version'
                 sh 'node -v'
                 sh 'npm -v'
