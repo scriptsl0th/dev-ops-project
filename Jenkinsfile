@@ -114,6 +114,28 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Minikube') {
+            steps {
+                sh '''
+                    kubectl version --client
+                    kubectl apply -f k8s/
+
+                    kubectl -n devops-app set image deployment/dev-ops-frontend \
+                      frontend="${DOCKERHUB_USER}/${APP_NAME}-frontend:${IMAGE_TAG}"
+
+                    kubectl -n devops-app set image deployment/dev-ops-backend \
+                      backend="${DOCKERHUB_USER}/${APP_NAME}-backend:${IMAGE_TAG}"
+
+                    kubectl -n devops-app rollout status deployment/postgres --timeout=180s
+                    kubectl -n devops-app rollout status deployment/dev-ops-backend --timeout=180s
+                    kubectl -n devops-app rollout status deployment/dev-ops-frontend --timeout=180s
+
+                    kubectl -n devops-app get pods
+                    kubectl -n devops-app get services
+                '''
+            }
+        }
     }
 
     post {

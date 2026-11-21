@@ -1,0 +1,128 @@
+https://killercoda.com/playgrounds/scenario/kubernetes
+
+sign in github
+
+kubectl get nodes 
+
+kubectl get nodes -o wide
+
+kubectl get namespaces
+
+kubectl cluster-info
+
+ls /etc/kubernetes/manifests/ 
+
+# Voir les composants du cluster (control-plane, etcd, scheduler, controller-manager, kube-proxy, coredns…)
+
+kubectl get pods -n kube-system
+
+
+// partie pod
+
+kubectl run my-nginx --image=nginx --port=80
+
+kubectl describe pod my-nginx
+
+ls
+
+créer ce fichier
+
+cat <<EOF > first-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: first-pod 
+  labels:
+    app: mon-application
+    environment: development
+spec:
+  containers:
+  - name: conteneur-api
+    image: hashicorp/http-echo
+    args:
+    - "-text=Hello Kubernetes 👋"
+    ports:
+    - containerPort: 5678
+EOF
+
+cat first-pod.yaml
+
+kubectl apply -f first-pod.yaml
+
+kubectl get pods
+
+kubectl describe pod first-pod
+
+kubectl expose pod first-pod --type=NodePort --port=5678
+
+kubectl get svc  // vérifier le port utilisé
+
+curl http://localhost:32202
+
+Hello Kubernetes 👋
+
+kubectl delete pod first-pod
+
+kubectl get pods
+
+kubectl apply -f first-pod.yaml
+
+kubectl logs  first-pod
+
+// service
+
+nano first-service.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-service
+spec:
+  selector:
+    app: mon-application   # doit correspondre au label du Pod
+  ports:
+  - protocol: TCP
+    port: 5678             # port interne du service
+    targetPort: 5678       # port exposé par le Pod
+    nodePort: 30080        # port externe fixe (entre 30000–32767)
+  type: NodePort
+
+nano first_replica.yml
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+
+kubectl apply -f first_service.yml
+kubectl apply -f first_replica.yml
+
+kubectl get pods
+kubectl get svc
+kubectl get rs
+
+// namespace
+
+kubectl create namespace spring-app
+
+kubectl config set-context --current --namespace=spring-app
+
+kubectl get namespaces
+
+kubectl get daemonsets --all-namespaces

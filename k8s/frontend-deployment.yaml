@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-ops-frontend
+  namespace: devops-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-ops-frontend
+  template:
+    metadata:
+      labels:
+        app: dev-ops-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: scriptsl0th/dev-ops-project-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 20
