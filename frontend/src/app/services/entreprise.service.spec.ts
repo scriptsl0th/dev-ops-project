@@ -30,7 +30,7 @@ describe('EntrepriseService', () => {
       expect(result).toEqual(entreprises);
     });
 
-    const request = http.expectOne('http://localhost:8080/entreprise/all');
+    const request = http.expectOne('/api/entreprise/all');
     expect(request.request.method).toBe('GET');
     request.flush(entreprises);
   });
@@ -38,7 +38,7 @@ describe('EntrepriseService', () => {
   it('should delete an entreprise by id', () => {
     service.delete(3).subscribe();
 
-    const request = http.expectOne('http://localhost:8080/entreprise/delete/3');
+    const request = http.expectOne('/api/entreprise/delete/3');
     expect(request.request.method).toBe('DELETE');
     request.flush(null);
   });
