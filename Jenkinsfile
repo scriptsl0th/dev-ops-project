@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'your-dockerhub-username'
+        DOCKERHUB_USER = 'scriptsl0th'
         APP_NAME       = 'dev-ops-project'
         IMAGE_TAG      = "${env.BUILD_NUMBER}"
         CI             = 'true'
