@@ -128,6 +128,7 @@ pipeline {
                     kubectl apply --validate=false -f k8s/postgres-pvc.yaml
                     kubectl apply --validate=false -f k8s/postgres-service.yaml
                     kubectl apply --validate=false -f k8s/postgres-deployment.yaml
+                    kubectl -n devops-app delete service backend-service --ignore-not-found=true
                     kubectl apply --validate=false -f k8s/backend-service.yaml
                     kubectl apply --validate=false -f k8s/backend-deployment.yaml
                     kubectl apply --validate=false -f k8s/frontend-service.yaml
